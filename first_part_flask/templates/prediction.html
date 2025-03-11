@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delivery Time Prediction</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        color: #4caf50;
+      }
+      p {
+        text-align: center;
+        color: #333;
+      }
+      form {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+      input[type="number"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Predict Delivery Time</h1>
+    <p>
+      Please only choose one of the weaher, traffic, time of day and vehicle
+      options! 1 stands for true and 0 stands for false.
+    </p>
+    <form action="/predict" method="post">
+      <label for="Distance_km">Distance (km):</label>
+      <input type="number" id="Distance_km" name="Distance_km" required />
+
+      <label for="Weather_Clear">Weather (Clear):</label>
+      <input
+        type="number"
+        id="Weather_Clear"
+        name="Weather_Clear"
+        value="0"
+        required
+      />
+
+      <label for="Weather_Foggy">Weather (Foggy):</label>
+      <input
+        type="number"
+        id="Weather_Foggy"
+        name="Weather_Foggy"
+        value="0"
+        required
+      />
+
+      <label for="Weather_Rainy">Weather (Rainy):</label>
+      <input
+        type="number"
+        id="Weather_Rainy"
+        name="Weather_Rainy"
+        value="0"
+        required
+      />
+
+      <label for="Weather_Snowy">Weather (Snowy):</label>
+      <input
+        type="number"
+        id="Weather_Snowy"
+        name="Weather_Snowy"
+        value="0"
+        required
+      />
+
+      <label for="Weather_Windy">Weather (Windy):</label>
+      <input
+        type="number"
+        id="Weather_Windy"
+        name="Weather_Windy"
+        value="0"
+        required
+      />
+
+      <label for="Traffic_Level_Low">Traffic Level (Low):</label>
+      <input
+        type="number"
+        id="Traffic_Level_Low"
+        name="Traffic_Level_Low"
+        value="0"
+        required
+      />
+
+      <label for="Traffic_Level_Medium">Traffic Level (Medium):</label>
+      <input
+        type="number"
+        id="Traffic_Level_Medium"
+        name="Traffic_Level_Medium"
+        value="0"
+        required
+      />
+
+      <label for="Traffic_Level_High">Traffic Level (High):</label>
+      <input
+        type="number"
+        id="Traffic_Level_High"
+        name="Traffic_Level_High"
+        value="0"
+        required
+      />
+
+      <label for="Time_of_Day_Afternoon">Time of Day (Afternoon):</label>
+      <input
+        type="number"
+        id="Time_of_Day_Afternoon"
+        name="Time_of_Day_Afternoon"
+        value="0"
+        required
+      />
+
+      <label for="Time_of_Day_Evening">Time of Day (Evening):</label>
+      <input
+        type="number"
+        id="Time_of_Day_Evening"
+        name="Time_of_Day_Evening"
+        value="0"
+        required
+      />
+
+      <label for="Time_of_Day_Morning">Time of Day (Morning):</label>
+      <input
+        type="number"
+        id="Time_of_Day_Morning"
+        name="Time_of_Day_Morning"
+        value="0"
+        required
+      />
+
+      <label for="Time_of_Day_Night">Time of Day (Night):</label>
+      <input
+        type="number"
+        id="Time_of_Day_Night"
+        name="Time_of_Day_Night"
+        value="0"
+        required
+      />
+
+      <label for="Vehicle_Type_Bike">Vehicle Type (Bike):</label>
+      <input
+        type="number"
+        id="Vehicle_Type_Bike"
+        name="Vehicle_Type_Bike"
+        value="0"
+        required
+      />
+
+      <label for="Vehicle_Type_Car">Vehicle Type (Car):</label>
+      <input
+        type="number"
+        id="Vehicle_Type_Car"
+        name="Vehicle_Type_Car"
+        value="1"
+        required
+      />
+
+      <label for="Vehicle_Type_Scooter">Vehicle Type (Scooter):</label>
+      <input
+        type="number"
+        id="Vehicle_Type_Scooter"
+        name="Vehicle_Type_Scooter"
+        value="0"
+        required
+      />
+
+      <label for="Preparation_Time_min">Preparation Time (min):</label>
+      <input
+        type="number"
+        id="Preparation_Time_min"
+        name="Preparation_Time_min"
+        required
+      />
+
+      <label for="Courier_Experience_yrs">Courier Experience (years):</label>
+      <input
+        type="number"
+        id="Courier_Experience_yrs"
+        name="Courier_Experience_yrs"
+        required
+      />
+
+      <input type="submit" value="Predict" />
+    </form>
+
+    {% if prediction is not none %}
+    <h2>Predicted Delivery Time: {{ prediction }} minutes</h2>
+    {% endif %}
+  </body>
+</html>
