@@ -81,15 +81,109 @@ def statistics():
     traffic = request.args.get('traffic')
     time_of_day = request.args.get('time_of_day')
     vehicle_type = request.args.get('vehicle_type')
-    preparation_time = request.args.get('preparation_time')
     courier_experience = request.args.get('courier_experience')
 
     # Load the data
     data = pd.read_csv("data/Food_Delivery_times.csv")
+
+    def get_weather_stats(data, weather):
+        if weather:
+            data = data[data['Weather'] == weather.title()]
+        
+        weather_stats = {
+            "average_distance_km": data["Distance_km"].mean(),
+            "average_preparation_time_min": data["Preparation_Time_min"].mean(),
+            "average_courier_experience_yrs": data["Courier_Experience_yrs"].mean(),
+            "average_delivery_time_min": data["Delivery_Time_min"].mean()
+        }
+        
+        return weather_stats
+
+    def get_traffic_stats(data, traffic):
+        if traffic:
+            data = data[data['Traffic_Level'] == traffic.title()]
+        
+        traffic_stats = {
+            "average_distance_km": data["Distance_km"].mean(),
+            "average_preparation_time_min": data["Preparation_Time_min"].mean(),
+            "average_courier_experience_yrs": data["Courier_Experience_yrs"].mean(),
+            "average_delivery_time_min": data["Delivery_Time_min"].mean()
+        }
+        
+        return traffic_stats
+
+    def get_time_of_day_stats(data, time_of_day):
+        if time_of_day:
+            data = data[data['Time_of_Day'] == time_of_day.title()]
+        
+        time_of_day_stats = {
+            "average_distance_km": data["Distance_km"].mean(),
+            "average_preparation_time_min": data["Preparation_Time_min"].mean(),
+            "average_courier_experience_yrs": data["Courier_Experience_yrs"].mean(),
+            "average_delivery_time_min": data["Delivery_Time_min"].mean()
+        }
+        
+        return time_of_day_stats
+
+    def get_vehicle_type_stats(data, vehicle_type):
+        if vehicle_type:
+            data = data[data['Vehicle_Type'] == vehicle_type.title()]
+        
+        vehicle_type_stats = {
+            "average_distance_km": data["Distance_km"].mean(),
+            "average_preparation_time_min": data["Preparation_Time_min"].mean(),
+            "average_courier_experience_yrs": data["Courier_Experience_yrs"].mean(),
+            "average_delivery_time_min": data["Delivery_Time_min"].mean()
+        }
+        
+        return vehicle_type_stats
     
+    def get_courier_experience_stats(data, courier_experience):
+        data["Courier_Experience_Group"] = pd.cut(data["Courier_Experience_yrs"], bins=[0, 1, 3, 5, 10], labels=["0-1", "1-3", "3-5", "5-10"])
+        
+        if courier_experience is not None:
+            if 0 < courier_experience <= 1:
+                experience_group = "0-1"
+            elif 1 < courier_experience <= 3:
+                experience_group = "1-3"
+            elif 3 < courier_experience <= 5:
+                experience_group = "3-5"
+            elif 5 < courier_experience <= 10:
+                experience_group = "5-10"
+            else:
+                return None
 
+            data = data[data["Courier_Experience_Group"] == experience_group]
+            
+            courier_experience_stats = {
+                "average_distance_km": data["Distance_km"].mean(),
+                "average_preparation_time_min": data["Preparation_Time_min"].mean(),
+                "average_courier_experience_yrs": data["Courier_Experience_yrs"].mean(),
+                "average_delivery_time_min": data["Delivery_Time_min"].mean()
+            }
+            
+            return courier_experience_stats
+    
+    stats = {}
 
+    if weather:
+        w_stats = get_weather_stats(data, weather)
+        stats[f"weather_stats_{weather}"] = w_stats
+    if traffic:
+        t_stats = get_traffic_stats(data, traffic)
+        stats[f"traffic_stats_{traffic}"] = t_stats
+    if time_of_day:
+        tod_stats = get_time_of_day_stats(data, time_of_day)
+        stats[f"time_of_day_stats_{time_of_day}"] = tod_stats
+    if vehicle_type:
+        v_stats = get_vehicle_type_stats(data, vehicle_type)
+        stats[f"vehicle_type_stats_{vehicle_type}"] = v_stats
+    if courier_experience:
+        c_stats = get_courier_experience_stats(data, courier_experience)
+        stats[f"courier_experience_stats_{courier_experience}"] = c_stats
 
+    return jsonify(stats)
+    
 #Path parameter route
 @app.route("/data/<int:order_id>", methods=["GET"])
 def data(order_id):
