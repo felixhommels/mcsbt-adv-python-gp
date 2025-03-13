@@ -191,11 +191,7 @@ def data(order_id):
     data['Order_ID'] = data['Order_ID'].astype(int)
     return jsonify(data[data['Order_ID'] == order_id].to_dict(orient="records"))
 
-
-from flask import request, jsonify
-import subprocess
-import os
-
+#Webhook route
 @app.route("/webhook", methods=["POST"])
 def webhook():
     path_repo = "/home/flizerflix/mcsbt-adv-python-gp"
