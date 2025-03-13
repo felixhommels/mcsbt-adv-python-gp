@@ -5,6 +5,8 @@ import pandas as pd
 import os
 import subprocess
 
+#Checking with this comment if webhook is working
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "models", "food_delivery_model.pkl")
 DATA_PATH = os.path.join(BASE_DIR, "data", "Food_Delivery_Times.csv")
@@ -190,6 +192,10 @@ def data(order_id):
     return jsonify(data[data['Order_ID'] == order_id].to_dict(orient="records"))
 
 
+from flask import request, jsonify
+import subprocess
+import os
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
     path_repo = "/home/flizerflix/mcsbt-adv-python-gp"
@@ -200,20 +206,19 @@ def webhook():
 
         if "repository" in payload:
             repo_name = payload["repository"]["name"]
-            clone_url = payload["repository"]["clone_url"]
 
             try:
                 os.chdir(path_repo)
             except FileNotFoundError:
-                return {"message": "The directory of the repository does not exist!"}, 404
+                return jsonify({"message": "The directory of the repository does not exist!"}), 404
 
             try:
-                subprocess.run(["git", "pull", clone_url], check=True)
+                subprocess.run(["git", "pull"], check=True)
                 subprocess.run(["touch", servidor_web], check=True)
-                return {"message": f"A git pull was applied in the repository {repo_name}"}, 200
-            except subprocess.CalledProcessError:
-                return {"message": f"Error trying to git pull the repository {repo_name}"}, 500
+                return jsonify({"message": f"Successfully pulled latest changes for {repo_name}"}), 200
+            except subprocess.CalledProcessError as e:
+                return jsonify({"message": f"Git pull failed!", "error": str(e)}), 500
         else:
-            return {"message": "No information found about the repository in the payload"}, 400
+            return jsonify({"message": "No repository information in payload"}), 400
     else:
-        return {"message": "The request does not have JSON data"}, 400
+        return jsonify({"message": "Invalid request, expected JSON"}), 400
