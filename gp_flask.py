@@ -15,7 +15,7 @@ def home():
 @app.route("/predict", methods=["GET", "POST"])
 def predict():
     if request.method == "POST":
-        model = pickle.load(open("food_delivery_model.pkl", "rb"))
+        model = pickle.load(open("./models/food_delivery_model.pkl", "rb"))
         
         if request.is_json:
             data = request.get_json()
