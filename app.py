@@ -7,7 +7,7 @@ import subprocess
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "models", "food_delivery_model.pkl")
-DATA_PATH = os.path.join(BASE_DIR, "data", "Food_Delivery_times.csv")
+DATA_PATH = os.path.join(BASE_DIR, "data", "Food_Delivery_Times.csv")
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -192,13 +192,12 @@ def data(order_id):
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    # route to the repository where the git pull will be applied
+    # Define repository path correctly
     path_repo = "/home/mcsbtfelixh/flask-project/mcsbt-adv-python-gp"
     servidor_web = "/var/www/mcsbtfelixh_pythonanywhere_com_wsgi.py"
 
     if request.is_json:
         payload = request.json
-
         if "repository" in payload:
             repo_name = payload["repository"]["name"]
             clone_url = payload["repository"]["clone_url"]
@@ -206,24 +205,16 @@ def webhook():
             try:
                 os.chdir(path_repo)
             except FileNotFoundError:
-                return {
-                    "message": "The directory of the repository does not exist!"
-                }, 404
+                return {"message": "The directory of the repository does not exist!"}, 404
 
             try:
                 subprocess.run(["git", "pull", clone_url], check=True)
                 subprocess.run(["touch", servidor_web], check=True)
-                return {
-                    "message": f"A git pull was applied in the repository {repo_name}"
-                }, 200
+                return {"message": f"A git pull was applied in the repository {repo_name}"}, 200
             except subprocess.CalledProcessError:
-                return {
-                    "message": f"Error trying to git pull the repository {repo_name}"
-                }, 500
+                return {"message": f"Error trying to git pull the repository {repo_name}"}, 500
         else:
-            return {
-                "message": "No information found about the repository in the payload"
-            }, 400
+            return {"message": "No repository info in payload"}, 400
     else:
         return {"message": "The request does not have JSON data"}, 400
 
