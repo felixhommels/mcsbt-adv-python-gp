@@ -62,9 +62,12 @@
   <body>
     <h1>Predict Delivery Time</h1>
     <p>
-      Please only choose one of the weaher, traffic, time of day and vehicle
-      options! 1 stands for true and 0 stands for false.
+      Please <strong>only choose one</strong> of the weather, traffic, time of
+      day and vehicle options! 1 stands for true and 0 stands for false.
     </p>
+    {% if prediction is not none %}
+    <h2>Predicted Delivery Time: {{ prediction }} minutes</h2>
+    {% endif %}
     <form action="/predict" method="post">
       <label for="Distance_km">Distance (km):</label>
       <input type="number" id="Distance_km" name="Distance_km" required />
@@ -222,9 +225,5 @@
 
       <input type="submit" value="Predict" />
     </form>
-
-    {% if prediction is not none %}
-    <h2>Predicted Delivery Time: {{ prediction }} minutes</h2>
-    {% endif %}
   </body>
 </html>

@@ -45,15 +45,134 @@
       <li>
         <strong>Prediction Page:</strong> <code>/predict</code> - Make
         predictions by providing the necessary parameters.
+        <ul>
+          <li><strong>Method:</strong> POST</li>
+          <li>
+            <strong>Parameters:</strong>
+            <ul>
+              <li><code>Distance_km</code>: Distance in kilometers (float)</li>
+              <li><code>Weather_Clear</code>: 1 if clear, 0 otherwise</li>
+              <li><code>Weather_Foggy</code>: 1 if foggy, 0 otherwise</li>
+              <li><code>Weather_Rainy</code>: 1 if rainy, 0 otherwise</li>
+              <li><code>Weather_Snowy</code>: 1 if snowy, 0 otherwise</li>
+              <li><code>Weather_Windy</code>: 1 if windy, 0 otherwise</li>
+              <li>
+                <code>Traffic_Level_Low</code>: 1 if low traffic, 0 otherwise
+              </li>
+              <li>
+                <code>Traffic_Level_Medium</code>: 1 if medium traffic, 0
+                otherwise
+              </li>
+              <li>
+                <code>Traffic_Level_High</code>: 1 if high traffic, 0 otherwise
+              </li>
+              <li>
+                <code>Time_of_Day_Afternoon</code>: 1 if afternoon, 0 otherwise
+              </li>
+              <li>
+                <code>Time_of_Day_Evening</code>: 1 if evening, 0 otherwise
+              </li>
+              <li>
+                <code>Time_of_Day_Morning</code>: 1 if morning, 0 otherwise
+              </li>
+              <li><code>Time_of_Day_Night</code>: 1 if night, 0 otherwise</li>
+              <li><code>Vehicle_Type_Bike</code>: 1 if bike, 0 otherwise</li>
+              <li><code>Vehicle_Type_Car</code>: 1 if car, 0 otherwise</li>
+              <li>
+                <code>Vehicle_Type_Scooter</code>: 1 if scooter, 0 otherwise
+              </li>
+              <li>
+                <code>Preparation_Time_min</code>: Preparation time in minutes
+                (float)
+              </li>
+              <li>
+                <code>Courier_Experience_yrs</code>: Courier experience in years
+                (float)
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Example JSON Request:</strong>
+            <pre>
+{
+  "Distance_km": 5.2,
+  "Weather_Clear": 1,
+  "Weather_Foggy": 0,
+  "Weather_Rainy": 0,
+  "Weather_Snowy": 0,
+  "Weather_Windy": 0,
+  "Traffic_Level_Low": 0,
+  "Traffic_Level_Medium": 1,
+  "Traffic_Level_High": 0,
+  "Time_of_Day_Afternoon": 1,
+  "Time_of_Day_Evening": 0,
+  "Time_of_Day_Morning": 0,
+  "Time_of_Day_Night": 0,
+  "Vehicle_Type_Bike": 0,
+  "Vehicle_Type_Car": 1,
+  "Vehicle_Type_Scooter": 0,
+  "Preparation_Time_min": 15.5,
+  "Courier_Experience_yrs": 3.2
+}
+            </pre>
+          </li>
+        </ul>
       </li>
       <li>
         <strong>Statistics Route:</strong> <code>/statistics</code> - View
         statistics filtered by various query parameters.
+        <p>
+          You can only chose one per category since it cant be sunny or rainy at
+          the same time for example.
+        </p>
+        <ul>
+          <li><strong>Method:</strong> GET</li>
+          <li>
+            <strong>Query Parameters:</strong>
+            <ul>
+              <li>
+                <code>weather</code>: Weather condition (e.g., "clear", "rainy",
+                "snowy", "foggy", "windy")
+              </li>
+              <li>
+                <code>traffic</code>: Traffic level (e.g., "low", "medium",
+                "high")
+              </li>
+              <li>
+                <code>time_of_day</code>: Time of day (e.g., "morning",
+                "afternoon", "evening")
+              </li>
+              <li>
+                <code>vehicle_type</code>: Vehicle type (e.g., "bike", "car")
+              </li>
+              <li>
+                <code>courier_experience</code>: Courier experience in years
+                (numeric)
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Example Request:</strong>
+            <code>url/statistics?weather=rainy</code>
+          </li>
+        </ul>
       </li>
       <li>
-        <strong>Statistics Summary Route:</strong>
-        <code>/statistics/summary</code> - Get a summary of statistics based on
-        path parameters.
+        <strong>Data Route:</strong> <code>/data/&lt;order_id&gt;</code> - Get
+        delivery data for a specific order ID.
+        <ul>
+          <li><strong>Method:</strong> GET</li>
+          <li>
+            <strong>Path Parameter:</strong>
+            <ul>
+              <li><code>order_id</code>: Integer ID of the order</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Example Request:</strong>
+            <code>url/data/522</code>
+          </li>
+        </ul>
       </li>
     </ul>
   </body>
