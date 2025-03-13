@@ -193,8 +193,8 @@ def data(order_id):
 @app.route("/webhook", methods=["POST"])
 def webhook():
     # route to the repository where the git pull will be applied
-    # path_repo = "/route/to/your/repository/on/PythonAnywhere"
-    # servidor_web = "/route/to/the/WSGI/file/for/configuration"
+    path_repo = "/home/mcsbtfelixh/flask-project/mcsbt-adv-python-gp"
+    servidor_web = "/var/www/mcsbtfelixh_pythonanywhere_com_wsgi.py"
 
     if request.is_json:
         payload = request.json
@@ -228,6 +228,3 @@ def webhook():
         return {"message": "The request does not have JSON data"}, 400
 
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
