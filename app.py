@@ -192,8 +192,8 @@ def data(order_id):
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    path_repo = "/home/mcsbtfelixh/flask-project/mcsbt-adv-python-gp"
-    servidor_web = "/var/www/mcsbtfelixh_pythonanywhere_com_wsgi.py"
+    path_repo = "/home/flizerflix/mcsbt-adv-python-gp"
+    servidor_web = "/var/www/flizerflix_pythonanywhere_com_wsgi.py"
 
     if request.is_json:
         payload = request.json
