@@ -192,12 +192,12 @@ def data(order_id):
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    # Define repository path correctly
     path_repo = "/home/mcsbtfelixh/flask-project/mcsbt-adv-python-gp"
     servidor_web = "/var/www/mcsbtfelixh_pythonanywhere_com_wsgi.py"
 
     if request.is_json:
         payload = request.json
+
         if "repository" in payload:
             repo_name = payload["repository"]["name"]
             clone_url = payload["repository"]["clone_url"]
@@ -214,8 +214,6 @@ def webhook():
             except subprocess.CalledProcessError:
                 return {"message": f"Error trying to git pull the repository {repo_name}"}, 500
         else:
-            return {"message": "No repository info in payload"}, 400
+            return {"message": "No information found about the repository in the payload"}, 400
     else:
         return {"message": "The request does not have JSON data"}, 400
-
-
