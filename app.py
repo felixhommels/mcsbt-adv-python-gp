@@ -2,6 +2,12 @@ from flask import Flask, request, jsonify, render_template
 import pickle
 import numpy as np
 import pandas as pd
+import os
+import subprocess
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "food_delivery_model.pkl")
+DATA_PATH = os.path.join(BASE_DIR, "data", "Food_Delivery_times.csv")
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -15,7 +21,7 @@ def home():
 @app.route("/predict", methods=["GET", "POST"])
 def predict():
     if request.method == "POST":
-        model = pickle.load(open("./models/food_delivery_model.pkl", "rb"))
+        model = pickle.load(open(MODEL_PATH, "rb"))
         
         if request.is_json:
             data = request.get_json()
@@ -87,7 +93,7 @@ def statistics():
     courier_experience = request.args.get('courier_experience')
 
     # Load the data
-    data = pd.read_csv("data/Food_Delivery_times.csv")
+    data = pd.read_csv(DATA_PATH)
 
     if courier_experience is not None:
         try:
@@ -179,9 +185,48 @@ def statistics():
 #Path parameter route
 @app.route("/data/<int:order_id>", methods=["GET"])
 def data(order_id):
-    data = pd.read_csv("data/Food_Delivery_times.csv")
+    data = pd.read_csv(DATA_PATH)
     data['Order_ID'] = data['Order_ID'].astype(int)
     return jsonify(data[data['Order_ID'] == order_id].to_dict(orient="records"))
+
+
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    # route to the repository where the git pull will be applied
+    # path_repo = "/route/to/your/repository/on/PythonAnywhere"
+    # servidor_web = "/route/to/the/WSGI/file/for/configuration"
+
+    if request.is_json:
+        payload = request.json
+
+        if "repository" in payload:
+            repo_name = payload["repository"]["name"]
+            clone_url = payload["repository"]["clone_url"]
+
+            try:
+                os.chdir(path_repo)
+            except FileNotFoundError:
+                return {
+                    "message": "The directory of the repository does not exist!"
+                }, 404
+
+            try:
+                subprocess.run(["git", "pull", clone_url], check=True)
+                subprocess.run(["touch", servidor_web], check=True)
+                return {
+                    "message": f"A git pull was applied in the repository {repo_name}"
+                }, 200
+            except subprocess.CalledProcessError:
+                return {
+                    "message": f"Error trying to git pull the repository {repo_name}"
+                }, 500
+        else:
+            return {
+                "message": "No information found about the repository in the payload"
+            }, 400
+    else:
+        return {"message": "The request does not have JSON data"}, 400
+
 
 
 if __name__ == "__main__":
